@@ -9,7 +9,9 @@ This Python package provides solutions to the transportation problem using three
 ## Installation
 - Install the required libraries using:
 
-```pip install numpy```
+```
+pip install numpy
+```
 
 ## Usage
 **Importing the Package**
