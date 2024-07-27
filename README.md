@@ -157,7 +157,7 @@ Rs.540
 ### NorthWestCornerRule
  - **get_position():** Returns the position of the current cell according to the North-West Corner Rule.
 - **get_cost():** Returns the cost of the current cell.
-- get_quality(): Returns the quantity to be transported from the current cell.
+- **get_quality():** Returns the quantity to be transported from the current cell.
 - **print():** Prints the current state of the matrix, availabilities,  and requirements.
 - **prune_matrix():** Updates the matrix by removing the fulfilled row or column.
 - **is_ThereMatrix():** Checks if there is any remaining matrix to process.
