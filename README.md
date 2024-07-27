@@ -12,14 +12,14 @@ Supply and Demands are also tell as Availabilities and Requirements
 ## Installation
 **Install the required libraries using:**
 
-```
+```python
 pip install numpy
 ```
 
 ## Usage
 **Importing the Package**
 
-```
+```python
 from OR import (NorthWestCornerRule,
                 MatrixMinimaMethod, 
                 VogelApproximationMethod)
@@ -27,7 +27,7 @@ from OR import user_input, adjust_matrix
 ```
 
 ## Sample Data
-```
+```python
 availabilities = [60, 70, 80]
 requirements = [50, 70, 60]
 d = [[8, 7, 3], [3, 8, 7], [11, 3, 5]]
@@ -39,7 +39,7 @@ To input the transportation matrix, availabilities, and requirements directly fr
 matrix, avail, require = user_input()
 ```
 Console output
-```
+```python
 Enter 'q' to quit: 
 Row 1: 8 7 3
 Row 2: 3 8 7
@@ -51,12 +51,12 @@ Enter Requirements: 50 70 60
 
 ## Adjusting the Matrix
 Ensure that the matrix is balanced (sum of availabilities equals the sum of requirements):
-```
+```python
 d, availabilities, requirements = adjust_matrix(d, availabilities, requirements)
 ```
 
 ## Solving Using Vogel's Approximation Method
-```
+```python
 condition = True
 print(d, availabilities, requirements)
 
@@ -80,7 +80,7 @@ if __name__ == "__main__":
 
 ## Results
 This is the result of a sample data which is provided in above
-```
+```python
 Matrix:
 [[ 8  7  3  0]
  [ 3  8  7  0]
