@@ -1,8 +1,8 @@
 # Transportation Problem Solver
 This Python package provides solutions to the transportation problem using three different algorithms: North West Corner Rule, Matrix Minima Method, and Vogel's Approximation Method. The transportation problem is a type of linear programming problem where the goal is to determine the most cost-efficient way to transport goods from multiple suppliers to multiple consumers while satisfying supply and demand constraints.
 
-**NOTE: Supply - Availabilities & Demands - Requirements**
-- Supply and Demands are also tell as Availabilities and Requirements
+**NOTE: Supply - Availabilities & Demands - Requirements**__
+Supply and Demands are also tell as Availabilities and Requirements
 
 ## Features
 - **North West Corner Rule**: A simple and straightforward method for generating an initial feasible solution.
