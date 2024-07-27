@@ -175,4 +175,4 @@ Contributions are welcome! Please feel free to submit a Pull Request or open an 
 
 ## Acknowledgements
 - Thanks to the developers of NumPy for providing an efficient numerical computing library.
-- Special thanks to everyone who contributed to the development and testing of these algorithms.
+- Special thanks to our statistic's lecturer who taught me the algorithms manually while pursuing the 
