@@ -39,7 +39,7 @@ To input the transportation matrix, availabilities, and requirements directly fr
 matrix, avail, require = user_input()
 ```
 Console output
-```python
+```
 Enter 'q' to quit: 
 Row 1: 8 7 3
 Row 2: 3 8 7
@@ -80,7 +80,7 @@ if __name__ == "__main__":
 
 ## Results
 This is the result of a sample data which is provided in above
-```python
+```
 Matrix:
 [[ 8  7  3  0]
  [ 3  8  7  0]
