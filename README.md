@@ -7,7 +7,7 @@ This Python package provides solutions to the transportation problem using three
 - **Vogel's Approximation Method** : A heuristic method that often produces better initial solutions by considering the penalties of not using the cheapest routes.
 
 ## Installation
-- Install the required libraries using:
+**Install the required libraries using:**
 
 ```
 pip install numpy
@@ -22,3 +22,74 @@ from OR import (NorthWestCornerRule,
                 VogelApproximationMethod)
 from OR import user_input, adjust_matrix 
 ```
+
+## Sample Data
+```
+availabilities = [60, 70, 80]
+requirements = [50, 70, 60]
+d = [[8, 7, 3], [3, 8, 7], [11, 3, 5]]
+```
+
+## Getting User Input
+To input the transportation matrix, availabilities, and requirements directly from the console, enter the matrix row by row, with elements separated by spaces:
+```
+matrix, avail, require = user_input()
+```
+
+## Adjusting the Matrix
+Ensure that the matrix is balanced (sum of availabilities equals the sum of requirements):
+```
+d, availabilities, requirements = adjust_matrix(d, availabilities, requirements)
+```
+
+## Solving Using Vogel's Approximation Method
+```
+condition = True
+print(d, availabilities, requirements)
+
+if __name__ == "__main__":
+    costs = []
+    quality = []
+
+    while condition:
+        obj = VogelApproximationMethod(d, availabilities, requirements)
+        obj.print()
+        costs.append(a := obj.get_cost())
+        print("Cost:", a)
+        quality.append(b := obj.get_quality())
+        print("Quality:", b)
+        condition, d, availabilities, requirements = obj.prune_matrix()
+        print("-----------------------------------")
+
+    minimum_cost = zip(costs, quality)
+    print("Rs.", sum([i*j for i, j in minimum_cost]), sep="")
+```
+
+## Classes and Methods
+**Exceptions**
+- NotMatch: Raised when the sum of availabilities does not match the sum of requirements.
+- MatrixUneven: Raised when the input matrix is jagged (not rectangular).
+- UIException: Raised when the input data is not balanced.
+
+### NorthWestCornerRule
+ - **get_position():** Returns the position of the current cell according to the North-West Corner Rule.
+- **get_cost():** Returns the cost of the current cell.
+- get_quality(): Returns the quantity to be transported from the current cell.
+- **print():** Prints the current state of the matrix, availabilities,  and requirements.
+- **prune_matrix():** Updates the matrix by removing the fulfilled row or column.
+- **is_ThereMatrix():** Checks if there is any remaining matrix to process.
+
+### MatrixMinimaMethod (inherits from NorthWestCornerRule)
+- **get_position():** Returns the position of the cell with the minimum cost.
+
+### VogelApproximationMethod (inherits from NorthWestCornerRule)
+- **get_penalty(data):** Returns the penalty of either a row or column based on the provided list.
+- **get_penalties(data):** Returns a tuple of penalties for rows and columns.
+- **get_position():** Returns the position of the smallest value in the highest penalty row or column.
+
+## Contributing
+Contributions are welcome! Please feel free to submit a Pull Request or open an Issue.
+
+## Acknowledgements
+- Thanks to the developers of NumPy for providing an efficient numerical computing library.
+- Special thanks to everyone who contributed to the development and testing of these algorithms.
