@@ -35,6 +35,16 @@ To input the transportation matrix, availabilities, and requirements directly fr
 ```
 matrix, avail, require = user_input()
 ```
+Console output
+```
+Enter 'q' to quit: 
+Row 1: 8 7 3
+Row 2: 3 8 7
+Row 3: 11 3 5
+Row 4: q
+Enter Availabilities: 60 70 80
+Enter Requirements: 50 70 60
+```
 
 ## Adjusting the Matrix
 Ensure that the matrix is balanced (sum of availabilities equals the sum of requirements):
@@ -66,6 +76,7 @@ if __name__ == "__main__":
 ```
 
 ## Results
+This is the result of a sample data which is provided in above
 ```
 Matrix:
 [[ 8  7  3  0]
