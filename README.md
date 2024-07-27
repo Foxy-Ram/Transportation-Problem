@@ -65,6 +65,78 @@ if __name__ == "__main__":
     print("Rs.", sum([i*j for i, j in minimum_cost]), sep="")
 ```
 
+## Results
+```
+Matrix:
+[[ 8  7  3  0]
+ [ 3  8  7  0]
+ [11  3  5  0]]
+Availabilities:
+[60, 70, 80]
+Requirements:
+[50, 70, 60, 30] 
+
+Cost: 3
+Quality: 50
+-----------------------------------
+Matrix:
+[[7 3 0]
+ [8 7 0]
+ [3 5 0]]
+Availabilities:
+[60, 20, 80]
+Requirements:
+[70, 60, 30] 
+
+Cost: 0
+Quality: 20
+-----------------------------------
+Matrix:
+[[7 3 0]
+ [3 5 0]]
+Availabilities:
+[60, 80]
+Requirements:
+[70, 60, 10] 
+
+Cost: 3
+Quality: 70
+-----------------------------------
+Matrix:
+[[3 0]
+ [5 0]]
+Availabilities:
+[60, 10]
+Requirements:
+[60, 10] 
+
+Cost: 0
+Quality: 10
+-----------------------------------
+Matrix:
+[[3]
+ [5]]
+Availabilities:
+[60, 0]
+Requirements:
+[60] 
+
+Cost: 3
+Quality: 60
+-----------------------------------
+Matrix:
+[[5]]
+Availabilities:
+[0]
+Requirements:
+[0] 
+
+Cost: 5
+Quality: 0
+-----------------------------------
+Rs.540
+```
+
 ## Classes and Methods
 **Exceptions**
 - NotMatch: Raised when the sum of availabilities does not match the sum of requirements.
