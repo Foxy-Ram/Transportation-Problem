@@ -171,7 +171,7 @@ Rs.540
 - **get_position():** Returns the position of the smallest value in the highest penalty row or column.
 
 ## Contributing
-Contributions are welcome! Please feel free to submit a Pull Request or open an Issue.
+- Contributions are welcome! Please feel free to submit a Pull Request or open an Issue.
 
 ## Acknowledgements
 - Thanks to the developers of NumPy for providing an efficient numerical computing library.
