@@ -149,7 +149,7 @@ Rs.540
 ```
 
 ## Classes and Methods
-**Exceptions**
+### Exceptions
 - NotMatch: Raised when the sum of availabilities does not match the sum of requirements.
 - MatrixUneven: Raised when the input matrix is jagged (not rectangular).
 - UIException: Raised when the input data is not balanced.
