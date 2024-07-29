@@ -20,10 +20,10 @@ pip install numpy
 **Importing the Package**
 
 ```python
-from OR import (NorthWestCornerRule,
+from TransportSolver import (NorthWestCornerRule,
                 MatrixMinimaMethod, 
                 VogelApproximationMethod)
-from OR import user_input, adjust_matrix 
+from TransportSolver import user_input, adjust_matrix 
 ```
 
 ## Sample Data
