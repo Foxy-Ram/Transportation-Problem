@@ -1,14 +1,14 @@
 import numpy as np
 
-class NotMatch(Exception):
+class NotMatch(Exception): # Not Match
     def __init__(self,message):
         self.message = message
 
-class MatrixUneven(Exception):
+class MatrixUneven(Exception): # Matrix Uneven
     def __init__(self,message):
         self.message = message
 
-class UIException(Exception):
+class UIException(Exception): # UI - User Input
     def __init__(self,message):
         self.message = message
 
