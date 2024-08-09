@@ -23,7 +23,7 @@ if __name__ == "__main__":
         quality.append(b := obj.get_quality())
         print("Quality:", b)
         condition, d, availabilities, requirements = obj.prune_matrix()
-        print("-----------------------------------")
+        print("-------------------------------------")
 
     minimum_cost = zip(costs, quality)
     print("Rs.",sum([i*j for i, j in minimum_cost]), sep="")
