@@ -1,6 +1,6 @@
 import numpy as np
 
-class NotMatch(Exception): # Not Match
+class NotMatch(Exception): # Matrix Not Match
     def __init__(self,message):
         self.message = message
 
