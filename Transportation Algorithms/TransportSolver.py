@@ -1,146 +1,235 @@
 import numpy as np
 
-class NotMatch(Exception): # Matrix Not Match
-    def __init__(self,message):
+class NotMatch(Exception): 
+    """Exception raised when the sum of availabilities and requirements do not match."""
+    
+    def __init__(self, message):
         self.message = message
 
-class MatrixUneven(Exception): # Matrix Uneven
-    def __init__(self,message):
+class MatrixUneven(Exception): 
+    """Exception raised for uneven (jagged) matrices."""
+    
+    def __init__(self, message):
         self.message = message
 
-class UIException(Exception): # UI - User Input
-    def __init__(self,message):
+class UIException(Exception): 
+    """Exception raised for incorrect user inputs that do not form a valid matrix."""
+    
+    def __init__(self, message):
         self.message = message
 
 class NorthWestCornerRule:
+    """Class implementing the North-West Corner Rule for solving transportation problems."""
+    
     def __init__(self, data, avail, require):
-        self.data = np.array(data) # (1)
+        """
+        Initialize the NorthWestCornerRule instance.
+        
+        Args:
+            data (list[list[int|float]]): Cost matrix for the transportation problem.
+            avail (list[int|float]): List of available supplies.
+            require (list[int|float]): List of required demands.
+            
+        Raises:
+            NotMatch: If the sum of availabilities and requirements do not match.
+            UIException: If the input data dimensions do not match the availability and requirement lengths.
+            MatrixUneven: If the input matrix is uneven (jagged).
+        """
+        self.data = np.array(data)
         self.avail = avail
         self.require = require
 
-        # The Not match exception checks the sum of availabilities and requirements are equal or not if not "Insists on to add a dummy variable".
         if sum(self.avail) != sum(self.require):
-            raise NotMatch("Check the sum of Availabilities and Requirements are same...!")
+            raise NotMatch("Check that the sum of availabilities and requirements are the same!")
 
-        # The UIException checks the all inputs are balanced are not.
-        if len(self.avail) != len(self.data) and len(self.require) != len(self.data[0]) :
-            raise UIException("The input data might not be appropriate redress the inputs again")
+        if len(self.avail) != len(self.data) or len(self.require) != len(self.data[0]):
+            raise UIException("The input data dimensions might not be appropriate; redress the inputs again.")
 
-        # The Matrix uneven exception deprecate jagged matrix, it is optional. The above (1) numpy checks before this.
         self.__len = [len(r) for r in data]
         for r in range(1, len(self.__len)):
             if self.__len[0] != self.__len[r]:
-                raise MatrixUneven("Might be the rows or columns values are jagged")
+                raise MatrixUneven("Rows or columns of the matrix might be uneven.")
 
-    # Getting position of a cell using North-West corner rule
     def get_position(self):
+        """
+        Get the position of the cell in the matrix according to the North-West Corner Rule.
+        
+        Returns:
+            tuple: The position (row, column) of the cell.
+        """
         arr = self.data
         spot = np.where(arr == arr[0, 0])
         position = (list(spot[0])[0], list(spot[1])[0])
         return position
 
-    # Getting cost of matrix using N-W-C-R
     def get_cost(self):
+        """
+        Get the cost of the cell in the matrix at the current position.
+        
+        Returns:
+            int|float: The cost value at the current position.
+        """
         return self.data[self.get_position()]
 
-    # Getting quality of matrix using N-W-C-R
     def get_quality(self):
+        """
+        Get the quality of the matrix at the current position using the North-West Corner Rule.
+        
+        Returns:
+            int|float: The minimum value between the availability and requirement at the current position.
+        """
         position = self.get_position()
         quality = min(self.avail[position[0]], self.require[position[1]])
         return quality
 
-    # Displaying the details of current matrix
-    def print(self)->None:
+    def print(self) -> None:
+        """
+        Display the details of the current matrix, including availabilities and requirements.
+        """
         print("Matrix:")
         print(np.array(self.data))
         print("Availabilities:")
         print(self.avail)
         print("Requirements:")
-        print(self.require,"\n")
+        print(self.require, "\n")
 
-    # Pruning matrix purely instructions based on N-W-C-R algorithm
     def prune_matrix(self):
-        # The below condition determines True when there is table. It is more helpful for running loop to generate pruning Tables
+        """
+        Prune the matrix based on the North-West Corner Rule algorithm.
+        
+        Returns:
+            tuple: A tuple containing:
+                - condition (bool): True if there is a matrix after pruning, False otherwise.
+                - matrix (list[list[int|float]]): The pruned matrix.
+                - avail (list[int|float]): The pruned availability list.
+                - require (list[int|float]): The pruned requirement list.
+        """
         condition = True
         matrix_ = list(self.data)
         matrix = [list(i) for i in matrix_]
         pos_a, pos_r = self.get_position()
 
-        # This IF solves the Two bugs which appears only in matrix 2*1 (or) 1*2 while testing is taken place
         if len(self.data.ravel()) == 2:
-            if self.avail[pos_a]>=self.require[pos_r] and len(self.require) == 1:# (1)
+            if self.avail[pos_a] >= self.require[pos_r] and len(self.require) == 1:
                 min_ = min(self.avail[1], self.require[0]) 
                 return True, [matrix[1]], [min_], [min_]
 
-            if self.avail[pos_a]<=self.require[pos_r] and len(self.avail) == 1:# (2)
+            if self.avail[pos_a] <= self.require[pos_r] and len(self.avail) == 1:
                 min_ = min(self.avail[0], self.require[1])
                 return True, [[matrix[0][1]]], [min_], [min_]
 
         if len(self.data.ravel()) == 1:
             return False, None, None, None
         else:
-            if self.avail[pos_a] >= self.require[pos_r]:# (2)
+            if self.avail[pos_a] >= self.require[pos_r]:
                 self.avail[pos_a] = abs(self.avail[pos_a] - self.require[pos_r])
                 for row in matrix:
                     row.pop(pos_r)
                 del self.require[pos_r]
 
-            else:# (1)
+            else:
                 self.require[pos_r] = abs(self.require[pos_r] - self.avail[pos_a])
                 del matrix[pos_a]
                 del self.avail[pos_a]
 
-            return condition, matrix, self.avail , self.require
+            return condition, matrix, self.avail, self.require
 
-    # Function to check is there any matrix after pruning
     def is_ThereMatrix(self):
+        """
+        Check if there is any matrix remaining after pruning.
+        
+        Returns:
+            bool: True if a matrix remains, False otherwise.
+        """
         condition = self.prune_matrix()
         if condition[0] == False:
-            print("\nNo there is no matrix")
+            print("\nNo, there is no matrix")
             return False
         else:
-            print("\nYes there is a matrix")
+            print("\nYes, there is a matrix")
             return condition[0]
 
 class MatrixMinimaMethod(NorthWestCornerRule):
+    """Class implementing the Matrix-Minima Method for solving transportation problems."""
+    
     def __init__(self, data, avail, require):
-        super(MatrixMinimaMethod,self).__init__(data=data, avail=avail, require=require)
+        """
+        Initialize the MatrixMinimaMethod instance.
+        
+        Args:
+            data (list[list[int|float]]): Cost matrix for the transportation problem.
+            avail (list[int|float]): List of available supplies.
+            require (list[int|float]): List of required demands.
+        """
+        super(MatrixMinimaMethod, self).__init__(data=data, avail=avail, require=require)
 
-    # Getting position of a cell using Matrix-Minima method
     def get_position(self):
+        """
+        Get the position of the cell in the matrix according to the Matrix-Minima Method.
+        
+        Returns:
+            tuple: The position (row, column) of the cell with the minimum value in the matrix.
+        """
         arr = self.data
         spot = np.where(arr == arr.min())
         position = (list(spot[0])[0], list(spot[1])[0])
         return position
 
 class VogelApproximationMethod(NorthWestCornerRule):
+    """Class implementing the Vogel Approximation Method for solving transportation problems."""
+    
     def __init__(self, data, avail, require):
-        super(VogelApproximationMethod,self).__init__(data=data, avail=avail, require=require)
+        """
+        Initialize the VogelApproximationMethod instance.
+        
+        Args:
+            data (list[list[int|float]]): Cost matrix for the transportation problem.
+            avail (list[int|float]): List of available supplies.
+            require (list[int|float]): List of required demands.
+        """
+        super(VogelApproximationMethod, self).__init__(data=data, avail=avail, require=require)
 
-    # This function returns penalty of either row or column based on the list provided
-    def get_penalty(self,data):
+    def get_penalty(self, data):
+        """
+        Calculate the penalty for a row or column based on the difference between the two smallest values.
+        
+        Args:
+            data (list[int|float]): A row or column of the matrix.
+            
+        Returns:
+            int|float: The penalty value.
+        """
         result = sorted(data)
         return result[0] - result[1]
 
-    # This function returns list of penalties in rows as well as in columns as tuple
-    def get_penalties(self,data):
+    def get_penalties(self, data):
+        """
+        Calculate the penalties for all rows and columns in the matrix.
+        
+        Args:
+            data (np.ndarray): The matrix to calculate penalties for.
+            
+        Returns:
+            tuple: A tuple containing the row penalties and column penalties.
+        """
         r = data
         c = r.copy().T
         row_pen = [abs(self.get_penalty(i)) for i in r]
         col_pen = [abs(self.get_penalty(j)) for j in c]
         return row_pen, col_pen
 
-    # Getting position of a cell using Vogel-Approximation method
     def get_position(self):
-        """ This function is somewhat cryptic because it returns
-            position of the smallest value in the largest penalty
-            either in row or column if both row will be chosen """
-        """ After many trials and errors i defined this function """
-        # This condition is for to get cost and quality of last 2 remained values in matrix for this we set the position always (0, 0).
-        if len(self.data.ravel())<=2:
+        """
+        Get the position of the cell in the matrix according to the Vogel Approximation Method.
+        
+        Returns:
+            tuple: The position (row, column) of the cell with the smallest value in the row or column 
+            with the largest penalty.
+        """
+        if len(self.data.ravel()) <= 2:
             return 0, 0
 
-        try: # This try block to manage code if any unexpected error is encountered at above IF condition.
+        try:
             r, c = self.get_penalties(self.data)
             max_r, max_c = max(r), max(c)
             index_r = index_c = None
@@ -149,15 +238,12 @@ class VogelApproximationMethod(NorthWestCornerRule):
             else:
                 index_c = c.index(max_c)
 
-            # When column position chooses first
-            if index_r == None:
+            if index_r is None:
                 c_pos = index_c
                 temp = list([i[c_pos] for i in self.data])
                 min_val = sorted(temp)[0]
                 r_pos = temp.index(min_val)
                 return r_pos, c_pos
-
-            # When row position chooses first
             else:
                 r_pos = index_r
                 temp = list(self.data[r_pos])
@@ -168,13 +254,21 @@ class VogelApproximationMethod(NorthWestCornerRule):
         except Exception as e:
             return 0, 0
 
-# This user_input() function gets input from user directly by terminal or output console in row wise
 def user_input():
+    """
+    Get input from the user for the cost matrix, availabilities, and requirements.
+    
+    Returns:
+        tuple: A tuple containing:
+            - matrix (list[list[int|float]]): The cost matrix.
+            - avail (list[int|float]): The list of available supplies.
+            - require (list[int|float]): The list of required demands.
+    """
     matrix = []
     print("Enter 'q' to quit: ")
     count_row = 1
     while True:
-        n = input(f"Row {count_row}: " )
+        n = input(f"Row {count_row}: ")
         if n == "q":
             break
         matrix.append(list(map(int, n.split())))
@@ -184,41 +278,50 @@ def user_input():
     require = list(map(int, input("Enter Requirements: ").split()))
     return matrix, avail, require
 
-
-# This function adjust_matrix() adds dummy variable when availabilities != requirements,The steps below are taken based on the algorithm
 def adjust_matrix(data: list[list[int|float]], availabilities: list, requirements: list):
-
+    """
+    Adjust the matrix by adding a dummy row or column if availabilities and requirements do not match.
+    
+    Args:
+        data (list[list[int|float]]): The original cost matrix.
+        availabilities (list[int|float]): The list of available supplies.
+        requirements (list[int|float]): The list of required demands.
+        
+    Returns:
+        tuple: A tuple containing:
+            - data (list[list[int|float]]): The adjusted cost matrix.
+            - availabilities (list[int|float]): The adjusted list of available supplies.
+            - requirements (list[int|float]]: The adjusted list of required demands.
+            
+    Raises:
+        MatrixUneven: If the provided data is a jagged matrix.
+    """
     if len(data) != len(availabilities) or len(data[0]) != len(requirements):
-        raise "Might be number of origins and availabilities (or) number of destinations and requirements are not equal"
+        raise Exception("Number of origins and availabilities or number of destinations and requirements are not equal.")
 
-    # Checking that data provided is a matrix if not raises error
     __len = [len(r) for r in data]
     for r in range(1, len(__len)):
         if __len[0] != __len[r]:
-            raise MatrixUneven("The provided data to data parameter is not an matrix, it is  jagged")
+            raise MatrixUneven("The provided data is a jagged matrix.")
 
     size_of_row = len(requirements)
-    size_of_col = len(availabilities) # Unused
     sum_a = sum(availabilities)
     sum_r = sum(requirements)
 
-    if sum_a != sum_r: # Checking if not equal we are going to adjust the matrix and remaining variables
-        # Here we are appending dummy column if availabilities > requirements  and adjusting requirements according to algorithm
-        if  sum_a > sum_r:
+    if sum_a != sum_r:
+        if sum_a > sum_r:
             temp = []
             for i in data:
                 i.append(0)
                 temp.append(i)
             data = temp
             requirements.append(abs(sum_a - sum_r))
-            return  data, availabilities, requirements
+            return data, availabilities, requirements
 
-        # Here we are appending dummy row if requirements > availabilities and adjusting availabilities according to algorithm
         else:
             data.append([0] * size_of_row)
             availabilities.append(abs(sum_r - sum_a))
-            return  data, availabilities, requirements
+            return data, availabilities, requirements
 
-    else: # Else we return the same data, availabilities, requirements which is provided
+    else:
         return data, availabilities, requirements
-
